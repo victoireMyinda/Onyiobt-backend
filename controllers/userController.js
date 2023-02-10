@@ -1,5 +1,6 @@
 const userModel = require("../models/userModel");
 const accountModel = require("../models/accountModel")
+const codeGenerate = require("../controllers/codeGenerate")
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -23,17 +24,20 @@ const createUSer = asynHandler(async(req, res) => {
                 const salt = bcrypt.genSaltSync(10);
                 const hashPassword = await bcrypt.hash(password, salt);
 
+                //var avatar = req.files.avatar;
+                //avatar.mv('../upload' + avatar.name.trim());
+
                 const user = await userModel.create({
                     name,
                     email,
                     password,
-                    photo,
+                    // photo: "../upload" + avatar.name,
                     password: hashPassword,
                 })
 
                 const account = await accountModel.create({
                     userId: user._id,
-                    accountNumber: 123,
+                    accountNumber: codeGenerate(),
                     solde: 2000,
                     devise: "OBT"
                 })

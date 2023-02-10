@@ -7,8 +7,7 @@ const accountSchema = mongoose.Schema({
         ref: "usermodel"
     },
     accountNumber: {
-        type: Number,
-        required: true,
+        type: String,
     },
 
     devise: {
