@@ -19,6 +19,11 @@ const videoSchema = mongoose.Schema({
     detail: {
         type: String,
     },
+
+    prix: {
+        type: Number,
+        defaut: 00
+    }
 }, {
     timestamps: true,
 });

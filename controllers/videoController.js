@@ -1,6 +1,7 @@
 const videoModel = require("../models/videosModel");
 const userModel = require("../models/userModel");
-const views = require("../models/viewsModel");
+const viewsModel = require("../models/viewsModel");
+const accountModel = require('../models/accountModel')
 const asynHandler = require("express-async-handler");
 
 const videoPost = asynHandler(async(req, res) => {
@@ -117,6 +118,12 @@ const deleteVideo = asynHandler(async(req, res) => {
             });
         });
 });
+
+
+
+
+
+
 
 module.exports = {
     videoPost,

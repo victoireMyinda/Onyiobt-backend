@@ -1,13 +1,6 @@
-const views = require("../models/viewsModel")
-const asynHandler = require('express-async-handler')
+const viewsModel = require("../models/viewsModel")
+const asynHandler = require('express-async-handler');
 
-
-
-//findOneviewByIdVideo
-
-//findAllviewsByIdVideo
-
-//calcul view by video watched and increment count property from viewModel
 
 const findOneView = asynHandler(async(req, res) => {
     const { id } = req.params;
@@ -38,5 +31,20 @@ const findAllViews = asynHandler(async(req, res) => {
     }
 });
 
+const findAllViewsByVideoId = asynHandler(async(req, res) => {
+    const videoId = req.params.id
+    try {
+        const views = await viewsModel.count({ videoId })
+        if (views) {
+            res.status(200).json({ message: "views find success" })
+        } else {
+            res.status(404).json({ message: "Views not find from this videoId" })
+        }
+    } catch (error) {
+        res.status(500).json({ messahe: "server error" + error })
 
-module.exports = { findOneView, findAllViews }
+    }
+})
+
+
+module.exports = { findOneView, findAllViews, findAllViewsByVideoId }
