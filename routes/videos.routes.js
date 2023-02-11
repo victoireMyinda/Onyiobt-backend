@@ -9,7 +9,7 @@ const {
 
 const router = express.Router()
 
-router.post('/posts/:postId', videoPost)
+router.post('/posts/:userId', videoPost)
 router.get('/find/:id', findOneVideo)
 router.get('/find', findAllVideos)
 router.put('modify/:id', updateVideo)

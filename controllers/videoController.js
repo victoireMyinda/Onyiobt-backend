@@ -5,9 +5,10 @@ const asynHandler = require("express-async-handler");
 
 const videoPost = asynHandler(async(req, res) => {
     const { nom, detail, url } = req.body;
+    const { userId } = req.params
 
     if (!req.body) {
-        res.status(400).json({ message: "input  good data" });
+        return res.status(400).json({ message: "input  good data" });
     }
 
     try {
@@ -17,20 +18,15 @@ const videoPost = asynHandler(async(req, res) => {
         } else {
             try {
                 const video = await videoModel.create({
-                    userId: req.body.userId,
-                    url: url,
-                    nom: nom,
-                    detail: detail,
-                });
-
-                const view = await views.create({
-                    videoID: video._id,
-                    count: 00,
+                    userId,
+                    url,
+                    nom,
+                    detail,
                 });
 
                 res.status(201).json({
                     message: "video posted success",
-                    data: { video, view },
+                    data: { video },
                 });
             } catch (error) {
                 console.log(error);

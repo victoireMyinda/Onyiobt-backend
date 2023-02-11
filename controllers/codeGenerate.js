@@ -12,7 +12,7 @@ const codeGenerate = () => {
     splitArray[9] = '-';
 
     let accountNumber = splitArray.join().replace(/[,]/g, '');
-
+    //verify if code exists
     return accountNumber
 
 }
