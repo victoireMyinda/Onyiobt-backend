@@ -1,12 +1,13 @@
 const videoModel = require("../models/videosModel");
 const userModel = require("../models/userModel");
 const viewsModel = require("../models/viewsModel");
-const accountModel = require('../models/accountModel')
+const accountModel = require("../models/accountModel");
 const asynHandler = require("express-async-handler");
+
 
 const videoPost = asynHandler(async(req, res) => {
     const { nom, detail, url } = req.body;
-    const { userId } = req.params
+    const { userId } = req.params;
 
     if (!req.body) {
         return res.status(400).json({ message: "input  good data" });
@@ -69,10 +70,6 @@ const findAllVideos = asynHandler(async(req, res) => {
     }
 });
 
-const findAllvideosByUserId = asynHandler(async(req, res) => {
-    console.log("");
-});
-
 const updateVideo = asynHandler(async(req, res) => {
     if (!req.body) {
         return res.status(400).json({ message: "Data to update can not be empty" });
@@ -120,16 +117,88 @@ const deleteVideo = asynHandler(async(req, res) => {
 });
 
 
+// check if user exists
+const checkIfUserExists = asynHandler(async(req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await userModel.findById({ _id: id });
+        if (user) {
+            res.status(200).json({ message: "user finded", data: user });
+        } else {
+            res.status(400).json({ message: "user not find" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "server error" + error });
+    }
+});
 
+//check if Video exists
+const checkIfVideoExists = asynHandler(async(req, res) => {
+    const { id } = req.params;
+    try {
+        const user = await videoModel.findById({ _id: id });
+        if (user) {
+            res.status(200).json({ message: "video finded", data: user });
+        } else {
+            res.status(400).json({ message: "video not find" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "server error" + error });
+    }
+});
 
+const checkUserWachedVideo = (userId, videosId) => {
+    return viewsModel.find({ userId, videosId });
+};
 
+const calculVideo = ({ userId, videoId }) => {
+    const video = videoModel.findById({ videoId });
 
+    if (!checkUserWachedVideo) {
+
+        const compteUserViewer = accountModel.findById({ userId });
+        if (compteUserViewer.solde > 0 && compteUserViewer.solde - video.prix > 0) {
+
+            const createView = viewsModel.create({
+                userId,
+                videoId,
+            });
+
+            if (createView) {
+                res.status(200).json({ message: 'view created succes', data: createView })
+            } else {
+                res.status(400).json({ message: "cannot created view" })
+            }
+
+            //update solde userViewer
+            compteUserViewer.update({
+                solde: compteUserViewer.solde - video.prix,
+            });
+
+            //update solde userPost
+            const compteUserPost = accountModel.findById({ userId: video.userId });
+            compteUserPost.update({
+                solde: compteUserViewer.solde + video.prix,
+            });
+
+            return video.url;
+        } else {
+            res
+                .status(403)
+                .json({
+                    message: "your balance is insufficient to perform this operation. please recharge your account",
+                });
+        }
+    } else {
+        return video.url;
+    }
+};
 
 module.exports = {
     videoPost,
     findOneVideo,
     findAllVideos,
-    findAllvideosByUserId,
     updateVideo,
     deleteVideo,
+    calculVideo
 };

@@ -12,10 +12,12 @@ const accountSchema = mongoose.Schema({
 
     devise: {
         type: String,
+        default: "OBT"
     },
 
     solde: {
         type: Number,
+        default: 0
     }
 }, {
     timestamps: true

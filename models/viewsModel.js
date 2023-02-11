@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
 const viewSchema = mongoose.Schema({
-    videoID: {
+    videoId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "videomodel"
     },
 
-    usersID: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "usermodel"
     },
